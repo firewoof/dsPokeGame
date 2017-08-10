@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "lib": [ "dom", "es5", "es2015.promise" ],
+    "target": "es5",
+    "outFile": "./assets/script/Lib/Namespace.js",
+    "allowJs": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true
+  },
+
+  // "files":[
+  //    "./assets/Script/common/UIManager.ts",
+  //    "./creator.d.ts"
+  // ],
+
+  // "include": [
+  //        "namespaces"
+  //    ],
+
+  "exclude": [
+    "node_modules"
+  ]
+}
