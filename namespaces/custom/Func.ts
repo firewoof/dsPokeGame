@@ -2,44 +2,8 @@
 /**
  * cs 自定义命名空间
  */
-//// <reference path="./../../../creator.d.ts" />
+/// <reference path="./../creator.d.ts" />
 namespace cs {
-    /**************** 常量区 scope ****************/
-    //服务器时区（协调世界时）
-    export const SERVER_UTC = 8; //东区符号+ 西区符号-
-
-    //自定义通用配色
-    /** GRAY */
-    export const GRAY = cc.color(143, 162, 176);
-    /** RED */
-    export const RED = cc.color(217, 73, 47);
-    /** GREEN */    
-    export const GREEN = cc.color(35, 141, 90);
-    /** YELLOW */
-    export const YELLOW = cc.color(252, 187, 12);
-    /** BLACK */
-    export const BLACK = cc.color(21, 25, 26);
-    /**************** 常量区 end ****************/
-
-
-    /**************** 枚举区 scope 请尽量以types结尾，表示这是枚举****************/
-    /**
-     * 日志类型
-     */
-    export enum LogTypes {
-        REQUEST = "Request",
-        NORMAL = "Normal"
-    }
-
-    /**
-     * 本地存储 key
-     */
-    export enum LSTypes {
-        UUID = "UUID",
-        NORMAL = "Normal"
-    }
-    /**************** 枚举区 end ****************/
-
     //时间
     /**
      * 获得相对精确的当前时间(1970至今的毫秒数)
@@ -346,7 +310,7 @@ namespace cs {
      * @param selfObj 
      * @param varName 
      */
-    export function egisterChangedSignal (selfObj, varName)
+    export function registerChangedSignal (selfObj, varName)
     {
         let signalName = varName + "ChangedSignal";
         selfObj._signalMap = selfObj._signalMap || {};
@@ -382,12 +346,3 @@ namespace cs {
         }
     }
 }
-
-// class ComponentEx extends cc.Component{
-//     protected _controller
-//     protected _model
-
-//     public set controller(controlller){
-//         this._controller = controlller
-//     }
-//}

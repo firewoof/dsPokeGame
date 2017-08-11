@@ -13,24 +13,59 @@ export class BaseController{
     }
 }
 
-import Signal from "../utils/Signal"
 export class BaseModel{
     protected _className:string
     protected _signalMap:object
 
-    constructor (){
+    constructor (className:string){
         this._signalMap = {}
+        this._className = className;
     }
 
-    public addSignalListenner(proName, callback){
-        let signal = this._signalMap[proName + "ChangedSignal"];
+    public addSignalListenner(proName : string, callback) : void
+    {
+        let signal:Signal = this._signalMap[proName + "ChangedSignal"];
         if(signal){
             signal.add(callback, this);
         }
     }
 
-    public destroy(){
+    public getChangedSignal(proName : string)
+    {
+        var signal = this._signalMap[proName + "ChangedSignal"];
+        if(!signal){
+            cc.log("changedSignal: "+ proName +" is not exists");
+        }
+        return signal;
+    }
+
+    public destroy():void
+    {
         Signal.clearAllSignal(this);
         this._signalMap = {};
+    }
+}
+
+
+export class BaseView {
+    protected _controller
+    protected _model
+
+    public set controller(controlller){
+        this._controller = controlller
+    }
+
+    set model (model){
+        this._model = model;
+        this.addSignalListenners()
+    }
+
+    onDestroy(){
+        if(this._model)
+            this._model.clearAllSignal(this);
+    }
+
+    addSignalListenners (){
+        //noting to do
     }
 }

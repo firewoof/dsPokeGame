@@ -1,10 +1,9 @@
-import {BaseController, BaseModel} from "../../../common/baseClass/BaseMVC"
+import { BaseModel, BaseView, BaseController } from "../../../common/baseClass/BaseMVC"
 export default class MainModel extends BaseModel {
     protected _isShowFPS:boolean;
 
     constructor(){
-        super()
-        this._className = "MainModel";
+        super("MainModel")
 
         this.registerSignals();
     }

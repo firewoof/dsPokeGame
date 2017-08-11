@@ -1,10 +1,14 @@
 /**
- * 主场景 controller
+ * login controller
  */
+import Model from '../model/LoginModel'
 import MainModule from '../../main/MainModule'
+import { BaseModel, BaseView, BaseController } from "../../../common/baseClass/BaseMVC"
 const {ccclass, property} = cc._decorator;
 @ccclass
-export default class LoginView extends cc.Component{
+export default class LoginView extends BaseView{
+    _model:Model
+
     //界面名字,全屏遮盖标记
     public static readonly viewName = "LoginView"
     public static readonly isCovered = true;
@@ -13,20 +17,17 @@ export default class LoginView extends cc.Component{
     background: cc.Sprite;
 
     @property(cc.Button)
-    loginBtn:cc.Button
+    loginBtn:cc.Button;
 
     //
 
     onLoad () {
-        //this.label.string = "update label";
-        //Common.a()
-
-        //UI.fun();
-        // let clickEventHandler()=>{
-
-        // } ;
         this.loginBtn.node.on('click', this.clickCallback, this);
         //this.label.string = "测试label";
+    }
+
+    addSignalListenners (){
+        //TODO
     }
 
     clickCallback(event){
@@ -36,13 +37,5 @@ export default class LoginView extends cc.Component{
        cc.log("login。。。。。");
         cc.director.loadScene("mainScene")
         MainModule.getInstance().show()
-    }
-
-    onStartGame () {
-
-    }
-
-    update() {
-        //this.label.string = "测试label";
     }
 }

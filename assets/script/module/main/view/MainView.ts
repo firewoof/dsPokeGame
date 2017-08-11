@@ -1,20 +1,22 @@
 /**
- * 主场景 controller
+ *  主界面 controller
  */
-import MainController from "../controller/MainController"
-import MainModel from "../model/MainModel"
+import Model from "../model/MainModel"
 import UIManager from "../../../common/UIManager"
-
+import { BaseModel, BaseView, BaseController } from "../../../common/baseClass/BaseMVC"
 const {ccclass, property} = cc._decorator;
 @ccclass
-export default class MainView extends cc.Component{
-    private _controller:MainController
-    private _model:MainModel
-
-    @property(cc.Sprite)
+export default class MainView extends BaseView {
+    @property({
+        default: null,
+        type:cc.Sprite
+    })
     background: cc.Sprite;
 
-    @property(cc.Label)
+    @property({
+        default: null,
+        type: cc.Label
+    })
     label: cc.Label;
 
     @property({
@@ -27,20 +29,11 @@ export default class MainView extends cc.Component{
         cc.log("MainView script");
     }
 
-    public set controller(controlller){ 
-        this._controller = controlller 
-    }
-
-    set model (model:MainModel){
-        this._model = model;
-        model.addSignalListenner("isShowFPS", function(isShowFPS){
+    addSignalListenners (){
+        this._model.addSignalListenner("isShowFPS", function(isShowFPS){
             cc.log("signal isShowFPS:"+isShowFPS);
             this.label.string = "isShowFPS:"+isShowFPS;
         }.bind(this))
-    }
-
-    onDestroy(){
-        //this._model.clearAllSignal(this);
     }
 
     onLoad () {
@@ -66,9 +59,5 @@ export default class MainView extends cc.Component{
 
     onStartGame () {
 
-    }
-
-    update() {
-        //this.label.string = "测试label";
     }
 }

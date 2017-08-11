@@ -1,18 +1,18 @@
-import MainView from "./view/MainView"
-import MainController from "./controller/MainController"
-import MainModel from "./model/MainModel"
+import Model from "./model/MainModel"
+import View from "./view/MainView"
+import Controller from "./controller/MainController"
 import UIManager from "./../../common/UIManager"
 
 export default class MainModule {
     private static instance:MainModule;
 
-    private view:MainView;
-    private controller:MainController;
-    private model:MainModel;
+    private model:Model;
+    private view:View;
+    private controller:Controller;
 
     constructor(){
-        this.model = new MainModel();
-        this.controller = new MainController();
+        this.model = new Model();
+        this.controller = new Controller();
     }
 
     public static getInstance() : MainModule { 
@@ -30,7 +30,7 @@ export default class MainModule {
 
     show(){
         //资源加载只能异步
-        cc.loader.loadRes("prefabs/mainView.prefab", cc.Prefab, function(err, prefab) {
+        cc.loader.loadRes(cs.PrefabSrc.mainView, cc.Prefab, function(err, prefab) {
             if (err) {
                 console.error(err);
                 return;
@@ -47,8 +47,7 @@ export default class MainModule {
     }
 
     destroy(){
-        if(this.controller){
+        if(this.controller)
             this.controller.destroy();  //controller的 destory会附带 model的释放
-        }
     }
 }

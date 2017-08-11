@@ -6,17 +6,15 @@
     "outFile": "./assets/script/Lib/Namespace.js",
     "allowJs": true,
     "experimentalDecorators": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "declaration":true  //参考 typescript官方指南 这个配置项可以在编译时生成对应的.d.ts声明文件
+    //"declarationDir": "./assets/script/Lib"
+    //"listEmittedFiles": true
   },
 
-  // "files":[
-  //    "./assets/Script/common/UIManager.ts",
-  //    "./creator.d.ts"
-  // ],
-
   // "include": [
-  //        "namespaces"
-  //    ],
+  //   "namespaces"
+  // ],
 
   "exclude": [
     "node_modules"

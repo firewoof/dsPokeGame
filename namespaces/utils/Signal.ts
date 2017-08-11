@@ -9,7 +9,7 @@ Copyright (c) 2009 Robert Penner
 Released under the MIT license.
 ]] --
 */
-export default class Signal {
+class Signal {
     _traceName : string
     _listenersDic : object //key是getKey出来的字符串，value是listener
     _oneTimeListenersDic : object//key是getKey出来的字符串，value是listener
@@ -18,7 +18,7 @@ export default class Signal {
     _numOneTimeListeners : number
     _newIndex : number
 
-    constructor(traceName) {
+    constructor(traceName:string) {
         this._traceName = traceName;
 
         this._listenersDic = {};
@@ -58,6 +58,10 @@ export default class Signal {
             this._numOneTimeListeners = this._numOneTimeListeners + 1;
         }
         return listener;
+    }
+
+    emit(value){
+        this.dispatch(value);
     }
 
     dispatch (value) {
