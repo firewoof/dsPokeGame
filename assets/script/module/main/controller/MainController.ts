@@ -1,4 +1,3 @@
-import { BaseModel, BaseView, BaseController } from "../../../common/baseClass/BaseMVC"
 export default class MainController extends BaseController {
     //private static instance : MainController;
 

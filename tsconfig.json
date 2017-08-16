@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "lib": [ "dom", "es5", "es2015.promise" ],
-    "target": "es5",
-    "outFile": "./assets/script/Lib/Namespace.js",
-    "allowJs": true,
-    "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "declaration":true  //参考 typescript官方指南 这个配置项可以在编译时生成对应的.d.ts声明文件
-    //"declarationDir": "./assets/script/Lib"
+    "module": "commonjs"
+    ,"lib": [ "dom", "es5", "es2015.promise" ]
+    ,"target": "es5"
+    ,"outFile": "./assets/script/Lib/Namespace.js"
+    ,"allowJs": true
+    ,"experimentalDecorators": true
+    ,"skipLibCheck": true
+    ,"declaration":true  //参考 typescript官方指南 这个配置项可以在编译时生成对应的.d.ts声明文件
+    ,"emitDecoratorMetadata":true
+    //,"declarationDir": "./assets/script/Lib"
     //"listEmittedFiles": true
   },
 

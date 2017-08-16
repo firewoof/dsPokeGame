@@ -1,14 +1,16 @@
 /**
  * 简单玩家对象(可用于其他玩家)
  */
-export class SimplePlayer{
+export class SimplePlayer extends BaseModel{
     protected _id;
     protected _nickName;
 
-    constructor(){
-        // createSetterGetter(this, "id", undefined, false);
-        // createSetterGetter(this, "nickName", undefined, true);
-        
+    constructor(className){
+        super(className || "BaseModel");
+
+        //初始化
+        this._id = null;
+        this._nickName = null;
     }
 
     get nickName() : string { 
@@ -24,29 +26,25 @@ export class SimplePlayer{
  * 玩家单例对象(当前玩家)
  */
 export default class Player extends SimplePlayer{
-    _className:string
-    _signalMap:object
 
-    private static instance : Player;
+    private static _instance : Player;
 
-    public static getInstance() : Player { 
+    public static get instance() : Player { 
         if(!Player.instance){
-            Player.instance = new Player();
+            Player._instance = new Player();
         }
-        return Player.instance;
+        return Player._instance;
     }
 
     constructor(){
-        super();
-        this._className = "Player";
-        this._signalMap = {};
+        super("Player");
 
-        cs.registerChangedSignal(this, "nickName");
+        this.registerChangedSignal("nickName");
     }
 
     set nickName(value) { 
         this._nickName = value; 
-        cs.dispatchChangedSignal(this, "nickName", this._nickName);
+        this.dispatchChangedSignal("nickName");
     }
 
     initByJson() : void {

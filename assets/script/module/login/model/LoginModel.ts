@@ -1,13 +1,23 @@
-import { BaseModel, BaseView, BaseController } from "../../../common/baseClass/BaseMVC"
 export default class LoginModel extends BaseModel {
-    protected _isShowFPS:boolean;
+     _isShowFPS:boolean;
 
     constructor(){
         super("LoginModel")
 
+        //把所有值赋值默认值
+        this._isShowFPS = false;
+
         //
         this.registerSignals();
     }
+
+    get isShowFPS () {
+        return this._isShowFPS;
+    };
+
+    set isShowFPS (value) {
+        this._isShowFPS = value;
+    };
 
    /**
      * 注册属性变更信号

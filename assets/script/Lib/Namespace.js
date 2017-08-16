@@ -1,3 +1,13 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 /**
  * 常量
  */
@@ -17,6 +27,19 @@ var cs;
     /** BLACK */
     cs.BLACK = cc.color(21, 25, 26);
 })(cs || (cs = {}));
+window["cs"] = cs;
+// let sgn = function (target: Function, key: string, value: any){
+//         return {
+//             value: function (...args: any[]) {
+//                 var a = args.map(a => JSON.stringify(a)).join();
+//                 var result = value.value.apply(this, args);
+//                 var r = JSON.stringify(result);
+//                 console.log(`Call: ${key}(${a}) => ${r}`);
+//                 return result;
+//             }
+//         };
+// }
+// window.sgn = sgn; 
 /**
  * 枚举
  */
@@ -389,48 +412,141 @@ var cs;
     var PrefabSrc;
     (function (PrefabSrc) {
         PrefabSrc["loginView"] = "prefabs/loginView";
-        PrefabSrc["mainView"] = "prefabs/mainView";
+        PrefabSrc["mainView"] = "prefabs/main/mainView";
     })(PrefabSrc = cs.PrefabSrc || (cs.PrefabSrc = {}));
 })(cs || (cs = {}));
-// class BaseController{
-//     protected _model
-//     public set model(model){
-//         this._model = model
-//     }
-//     public destroy(){
-//         if(this._model){
-//             this._model.destroy();
-//         }
-//     }
-// }
-// class BaseModel{
-//     protected _className:string
-//     protected _signalMap:object
-//     constructor (className:string){
-//         this._signalMap = {}
-//         this._className = className;
-//     }
-//     public addSignalListenner(proName : string, callback) : void
-//     {
-//         let signal:Signal = this._signalMap[proName + "ChangedSignal"];
-//         if(signal){
-//             signal.add(callback, this);
-//         }
-//     }
-//     public getChangedSignal(proName : string) : Signal
-//     {
-//         var signal = this._signalMap[proName + "ChangedSignal"];
-//         if(!signal){
-//             cc.log("changedSignal: "+ proName +" is not exists");
-//         }
-//         return signal;
-//     }
-//     public destroy():void
-//     {
-//         Signal.clearAllSignal(this);
-//         this._signalMap = {};
-//     }
-// } 
+/// <reference path="./../../creator.d.ts" />
+var BaseController = (function () {
+    function BaseController() {
+    }
+    Object.defineProperty(BaseController.prototype, "model", {
+        set: function (model) {
+            this._model = model;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    BaseController.prototype.destroy = function () {
+        if (this._model) {
+            this._model.destroy();
+        }
+    };
+    return BaseController;
+}());
+var BaseModel = (function () {
+    function BaseModel(className) {
+        this._signalMap = {};
+        this._className = className;
+    }
+    BaseModel.prototype.addSignalListenner = function (proName, callback) {
+        var signal = this._signalMap[proName + "ChangedSignal"];
+        if (signal) {
+            signal.add(callback, this);
+        }
+    };
+    BaseModel.prototype.getChangedSignal = function (proName) {
+        var signal = this._signalMap[proName + "ChangedSignal"];
+        if (!signal) {
+            console.log("changedSignal: " + proName + " is not exists");
+        }
+        return signal;
+    };
+    BaseModel.prototype.registerChangedSignal = function (proName) {
+        cs.registerChangedSignal(this, proName);
+    };
+    /**
+     * @param proName 属性名(不包含开头“_”下划线)
+     * @param changeValue 默认可不传 表示值是以_开头的变量
+     */
+    BaseModel.prototype.dispatchChangedSignal = function (proName, changeValue) {
+        cs.dispatchChangedSignal(this, proName, changeValue || this["_" + proName]);
+    };
+    BaseModel.prototype.destroy = function () {
+        Signal.clearAllSignal(this);
+        this._signalMap = {};
+    };
+    /**
+     * 偷懒用，一键生成 get set
+     */
+    BaseModel.prototype.printGetSetter = function () {
+        var isCreateSetFunc = true;
+        var object = this;
+        for (var prop in object) {
+            var objProp = object[prop];
+            //忽略函数和带"__"的变量
+            if (objProp instanceof Function || prop.indexOf("__") == 0
+                || prop == "_signalMap" || prop == "_className") {
+                continue;
+            }
+            var name_1 = "";
+            var valueName = "";
+            if (prop.substr(0, 1) == "_") {
+                //name = prop.substr(1, 1).toUpperCase() + prop.substr(2, prop.length);
+                valueName = prop.substr(1, prop.length);
+            }
+            var typeStr = "*";
+            switch (typeof (objProp)) {
+                case "number":
+                    typeStr = "Number";
+                    break;
+                case "string":
+                    typeStr = "String";
+                    break;
+                case "boolean":
+                    typeStr = "Boolean";
+                    break;
+                case "object":
+                    if (objProp instanceof Array)
+                        typeStr = "Array";
+                    else
+                        typeStr = "*|Object";
+                    break;
+                default:
+                    typeStr = "*";
+                    break;
+            }
+            //console.log(cc.js.formatStr("/**\n * @returns {%s}\n */", typeStr));
+            console.log(cc.js.formatStr("%s %s () {\n    return this.%s;\n};\n", "get", valueName, prop));
+            if (isCreateSetFunc == undefined || isCreateSetFunc) {
+                //console.log(cc.js.formatStr("/**\n * @param {%s} %s\n */", typeStr, valueName));
+                console.log(cc.js.formatStr("%s %s (value) {\n    this.%s = value;\n};\n", "set", valueName, prop));
+            }
+        }
+    };
+    return BaseModel;
+}());
+var BaseView = (function (_super) {
+    __extends(BaseView, _super);
+    function BaseView() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Object.defineProperty(BaseView.prototype, "controller", {
+        set: function (controlller) {
+            this._controller = controlller;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BaseView.prototype, "model", {
+        set: function (model) {
+            this._model = model;
+            this.addSignalListenners();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    BaseView.prototype.onDestroy = function () {
+        if (this._model)
+            this._model.clearAllSignal(this);
+    };
+    BaseView.prototype.addSignalListenners = function () {
+        //noting to do
+    };
+    return BaseView;
+}(cc.Component));
+window["BaseView"] = BaseView;
+window["BaseModel"] = BaseModel;
+window["BaseController"] = BaseController;
 /*
 signal.js
 Copyright (c) 2011 Josh Tynjala
@@ -445,16 +561,24 @@ Released under the MIT license.
 var Signal = (function () {
     function Signal(traceName) {
         this._traceName = traceName;
-        this._listenersDic = {};
-        this._oneTimeListenersDic = {};
-        this._emitListenersArr = null;
+        this.reset();
+    }
+    Signal.prototype.reset = function () {
+        this._listenersDic = new Map(); //[];
+        this._oneTimeListenersDic = new Map();
+        this._emitListenersArr = [];
         this._numListeners = 0;
         this._numOneTimeListeners = 0;
         this._newIndex = 0;
-    }
+    };
     Signal.prototype.isEmpty = function () {
         return this._numListeners <= 0;
     };
+    /**
+     * 注册
+     * @param func
+     * @param scope
+     */
     Signal.prototype.add = function (func, scope) {
         if (func == null) {
             cc.error("Function passed to signal:add() must not non-nil.");
@@ -463,9 +587,7 @@ var Signal = (function () {
         if (obj.isNew) {
             this._listenersDic[obj.listener.key] = obj.listener;
             this._numListeners = this._numListeners + 1;
-            if (this._emitListenersArr) {
-                this._emitListenersArr.push(obj.listener);
-            }
+            this._emitListenersArr.push(obj.listener);
         }
         else
             obj.listener = null;
@@ -489,7 +611,7 @@ var Signal = (function () {
         var t = null;
         var dispatchNum = null;
         if (this._numListeners == 1) {
-            var listener = Signal.getOne(this._listenersDic);
+            var listener = this.getOne();
             if (listener.scope) {
                 listener.func.call(listener.scope, value);
             }
@@ -497,12 +619,12 @@ var Signal = (function () {
                 listener.func(value);
         }
         else {
-            if (!this._emitListenersArr) {
-                this._emitListenersArr = Signal.toArray(this._listenersDic);
-                this._emitListenersArr.sort(Signal.listenerSorter);
+            if (this._emitListenersArr.length == 0) {
+                this._emitListenersArr = this.toArray(this._listenersDic);
+                this._emitListenersArr.sort(this.listenerSorter);
             }
             for (var i = 0; i < this._emitListenersArr.length; i++) {
-                listener = this._emitListenersArr[i];
+                var listener = this._emitListenersArr[i];
                 if (listener.scope)
                     listener.func.call(listener.scope, value);
                 else
@@ -535,15 +657,10 @@ var Signal = (function () {
         }
     };
     Signal.prototype.removeAll = function () {
-        this._listenersDic = {};
-        this._oneTimeListenersDic = {};
-        this._numListeners = 0;
-        this._numOneTimeListeners = 0;
-        this._emitListenersArr = null;
-        this._newIndex = 0;
+        this.reset();
     };
     Signal.prototype.getListener = function (func, scope) {
-        var key = Signal.getKey(func, scope);
+        var key = this.getKey(func, scope);
         var listener = this._listenersDic[key];
         var isNew = false;
         var scopeFunc = null;
@@ -570,24 +687,29 @@ var Signal = (function () {
             // }
         }
     };
-    Signal.toArray = function (dic) {
-        var result = Array();
+    Signal.prototype.toArray = function (dic) {
+        var result = [];
         for (var k in dic) {
             result.push(dic[k]);
         }
         return result;
     };
-    Signal.getOne = function (listeners) {
-        for (var v in listeners) {
-            return listeners[v];
+    Signal.prototype.getOne = function () {
+        for (var v in this._listenersDic) {
+            return this._listenersDic[v];
         }
-        return null;
     };
-    Signal.listenerSorter = function (a, b) {
+    Signal.prototype.listenerSorter = function (a, b) {
         return a.index - b.index;
     };
-    Signal.getKey = function (func, scope) {
-        return Crypto.MD5(func.toString() + "|" + (scope || "").toString());
+    Signal.prototype.getKey = function (func, scope) {
+        var key = func.__signalSymbol;
+        if (!key || !this._listenersDic[key] || this._listenersDic[key].scope != scope) {
+            key = func.__signalSymbol = Symbol("singalSymbol");
+        }
+        cc.log(key.toString());
+        return key;
     };
     return Signal;
 }());
+window["Signal"] = Signal;

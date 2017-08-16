@@ -1,6 +1,6 @@
 namespace cs {
     export enum PrefabSrc {
         loginView = "prefabs/loginView",
-        mainView = "prefabs/mainView"
+        mainView = "prefabs/main/mainView"
     } 
 }

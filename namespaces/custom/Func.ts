@@ -66,7 +66,7 @@ namespace cs {
      * @param {*|Number} [secs]
      * @param {String} [format] for example "yy:MM:dd HH:mm:ss"
     */
-    export function formatSecs (secs:number, format:string)
+    export function formatSecs (secs:number, format?:string)
     {
         secs = secs || this.getCurSecs();
         let locDate = new Date(secs * 1000);

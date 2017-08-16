@@ -51,7 +51,7 @@ export default class LogModel  {
         }
         var str = strArray.join("\r\n");
 
-        var fileName = Player.getInstance().nickName + "_" + cs.getCurSecs()+".txt";
+        var fileName = Player.instance.nickName + "_" + cs.getCurSecs()+".txt";
         cs.writeStringToFile(fileName, str);
         return fileName;
     }

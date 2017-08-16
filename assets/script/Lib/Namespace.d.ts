@@ -1,18 +1,19 @@
+/// <reference path="../../../creator.d.ts" />
 /**
  * 常量
  */
 declare namespace cs {
     const SERVER_UTC = 8;
     /** GRAY */
-    const GRAY: any;
+    const GRAY: cc.Color;
     /** RED */
-    const RED: any;
+    const RED: cc.Color;
     /** GREEN */
-    const GREEN: any;
+    const GREEN: cc.Color;
     /** YELLOW */
-    const YELLOW: any;
+    const YELLOW: cc.Color;
     /** BLACK */
-    const BLACK: any;
+    const BLACK: cc.Color;
 }
 /**
  * 枚举
@@ -59,7 +60,7 @@ declare namespace cs {
      * @param {*|Number} [secs]
      * @param {String} [format] for example "yy:MM:dd HH:mm:ss"
     */
-    function formatSecs(secs: number, format: string): string;
+    function formatSecs(secs: number, format?: string): string;
     /**
      * 深拷贝--仅限于js原生对象
      * @param obj --被拷贝对象
@@ -131,19 +132,56 @@ declare namespace cs {
 declare namespace cs {
     enum PrefabSrc {
         loginView = "prefabs/loginView",
-        mainView = "prefabs/mainView",
+        mainView = "prefabs/main/mainView",
     }
+}
+declare class BaseController {
+    protected _model: any;
+    model: any;
+    destroy(): void;
+}
+declare class BaseModel {
+    protected _className: string;
+    protected _signalMap: object;
+    constructor(className: string);
+    addSignalListenner(proName: string, callback: any): void;
+    getChangedSignal(proName: string): Signal;
+    registerChangedSignal(proName: string): void;
+    /**
+     * @param proName 属性名(不包含开头“_”下划线)
+     * @param changeValue 默认可不传 表示值是以_开头的变量
+     */
+    dispatchChangedSignal(proName: string, changeValue?: any): void;
+    destroy(): void;
+    /**
+     * 偷懒用，一键生成 get set
+     */
+    printGetSetter(): void;
+}
+declare class BaseView extends cc.Component {
+    protected _controller: any;
+    protected _model: any;
+    controller: any;
+    model: any;
+    onDestroy(): void;
+    addSignalListenners(): void;
 }
 declare class Signal {
     _traceName: string;
-    _listenersDic: object;
-    _oneTimeListenersDic: object;
+    _listenersDic: Map<any, any>;
+    _oneTimeListenersDic: Map<any, any>;
     _emitListenersArr: any;
     _numListeners: number;
     _numOneTimeListeners: number;
     _newIndex: number;
     constructor(traceName: string);
+    reset(): void;
     isEmpty(): boolean;
+    /**
+     * 注册
+     * @param func
+     * @param scope
+     */
     add(func: any, scope: any): any;
     addOnce(func: any, scope: any): any;
     emit(value: any): void;
@@ -158,8 +196,8 @@ declare class Signal {
      * 清除这个对象上面的所有Signal的事件绑定
      */
     static clearAllSignal(obj: object): void;
-    static toArray(dic: any): any[];
-    static getOne(listeners: any): any;
-    static listenerSorter(a: any, b: any): number;
-    static getKey(func: any, scope: any): any;
+    toArray(dic: any): any[];
+    getOne(): any;
+    listenerSorter(a: any, b: any): number;
+    getKey(func: any, scope: any): any;
 }

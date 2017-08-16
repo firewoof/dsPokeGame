@@ -17,3 +17,5 @@ namespace cs {
         /** BLACK */
         export const BLACK = cc.color(21, 25, 26);
 }
+
+window["cs"] = cs;

@@ -1,5 +1,5 @@
-import Signal from "./utils/Signal"
-class  EventManager{
+//import Signal from "./utils/Signal"
+export class  EventManager{
     private static instance:EventManager
     private _eventSignal:object
 

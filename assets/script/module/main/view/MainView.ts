@@ -1,9 +1,9 @@
+
 /**
  *  主界面 controller
  */
 import Model from "../model/MainModel"
 import UIManager from "../../../common/UIManager"
-import { BaseModel, BaseView, BaseController } from "../../../common/baseClass/BaseMVC"
 const {ccclass, property} = cc._decorator;
 @ccclass
 export default class MainView extends BaseView {
@@ -31,8 +31,13 @@ export default class MainView extends BaseView {
 
     addSignalListenners (){
         this._model.addSignalListenner("isShowFPS", function(isShowFPS){
-            cc.log("signal isShowFPS:"+isShowFPS);
+            cc.log("1111signal isShowFPS:"+isShowFPS);
             this.label.string = "isShowFPS:"+isShowFPS;
+        }.bind(this))
+
+        this._model.addSignalListenner("isShowFPS", function(isShowFPS){
+            cc.log("2222signal isShowFPS:"+isShowFPS);
+            //this.label.string = "isShowFPS:"+isShowFPS;
         }.bind(this))
     }
 

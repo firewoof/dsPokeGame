@@ -11,8 +11,8 @@ Released under the MIT license.
 */
 class Signal {
     _traceName : string
-    _listenersDic : object //key是getKey出来的字符串，value是listener
-    _oneTimeListenersDic : object//key是getKey出来的字符串，value是listener
+    _listenersDic : Map<any,any> //key是getKey出来的字符串，value是listener
+    _oneTimeListenersDic : Map<any,any>//key是getKey出来的字符串，value是listener
     _emitListenersArr
     _numListeners : number
     _numOneTimeListeners : number
@@ -21,11 +21,15 @@ class Signal {
     constructor(traceName:string) {
         this._traceName = traceName;
 
-        this._listenersDic = {};
-        this._oneTimeListenersDic = {};
-        this._emitListenersArr = null;
+        this.reset();
+    }
+
+    reset(){
+        this._listenersDic = new Map()//[];
+        this._oneTimeListenersDic = new Map()
+        this._emitListenersArr = [];
         this._numListeners = 0;
-        this._numOneTimeListeners = 0;
+        this._numOneTimeListeners = 0;        
         this._newIndex = 0;
     }
 
@@ -33,17 +37,21 @@ class Signal {
         return this._numListeners <= 0;
     }
 
+    /**
+     * 注册
+     * @param func 
+     * @param scope 
+     */
     add (func, scope) {
         if (func == null) {
             cc.error("Function passed to signal:add() must not non-nil.");
         }
+        
         var obj = this.getListener(func, scope)
         if (obj.isNew) {
             this._listenersDic[obj.listener.key] = obj.listener;
             this._numListeners = this._numListeners + 1;
-            if (this._emitListenersArr) {
-                this._emitListenersArr.push(obj.listener);
-            }
+            this._emitListenersArr.push(obj.listener);
         }
         else
             obj.listener = null;
@@ -69,10 +77,10 @@ class Signal {
             return;
         }
 
-        var t = null;
-        var dispatchNum = null;
+        let t = null;
+        let dispatchNum = null;
         if (this._numListeners == 1) {
-            var listener = Signal.getOne(this._listenersDic);
+            let listener = this.getOne();
             if (listener.scope) {
                 listener.func.call(listener.scope, value);
             }
@@ -80,12 +88,12 @@ class Signal {
                 listener.func(value);
         }
         else {
-            if (!this._emitListenersArr) {
-                this._emitListenersArr = Signal.toArray(this._listenersDic);
-                this._emitListenersArr.sort(Signal.listenerSorter);
+            if (this._emitListenersArr.length == 0) {
+                this._emitListenersArr = this.toArray(this._listenersDic);
+                this._emitListenersArr.sort(this.listenerSorter);
             }
-            for (var i = 0; i <  this._emitListenersArr.length; i++) {
-                listener =  this._emitListenersArr[i];
+            for (let i = 0; i <  this._emitListenersArr.length; i++) {
+                let listener =  this._emitListenersArr[i];            
                 if (listener.scope)
                     listener.func.call(listener.scope, value);
                 else
@@ -124,27 +132,19 @@ class Signal {
     }
 
     removeAll () {
-        this._listenersDic = {}
-        this._oneTimeListenersDic = {}
-        this._numListeners = 0;
-        this._numOneTimeListeners = 0;
-
-        this._emitListenersArr = null;
-
-        this._newIndex = 0;
+        this.reset();
     }
 
     getListener (func, scope){
-        var key = Signal.getKey(func, scope);
-        var listener = this._listenersDic[key];
-        var isNew = false;
-        var scopeFunc = null;
+        let key = this.getKey(func, scope);
+        let listener = this._listenersDic[key];
+        let isNew = false;
+        let scopeFunc = null;
         if(!listener){
             this._newIndex = this._newIndex + 1;
             isNew = true;
             listener = {func: func, scope: scope, key: key, index: this._newIndex}
-        }
-
+        }    
         return {listener : listener, isNew : isNew}
     }
 
@@ -165,30 +165,34 @@ class Signal {
         }
     }
 
-    public static toArray (dic){
-        var result = Array();
+    public toArray (dic){
+        var result = [];
         for(let k in dic) {
             result.push(dic[k]);
         }
         return result;
     }
 
-    public static getOne (listeners) {
-        for (let v in listeners) {
-            return listeners[v];
+    public getOne () {
+        for (let v in this._listenersDic) {
+            return this._listenersDic[v];
         }
-        return null;
     }
 
-    public static listenerSorter (a, b) {
+    public listenerSorter (a, b) {
         return a.index - b.index;
     }
 
-    public static getKey (func, scope) {
-        return Crypto.MD5(func.toString() + "|" + (scope || "").toString());
+    public getKey (func, scope) {    
+        let key = func.__signalSymbol;        
+        if(!key || !this._listenersDic[key] || this._listenersDic[key].scope != scope){
+            key = func.__signalSymbol = Symbol("singalSymbol");
+        }
+        cc.log(key.toString());
+        return key;
     }
 }
 
-
+window["Signal"] = Signal;
 
 

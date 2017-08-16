@@ -17004,7 +17004,7 @@ declare module cc.js {
 	     cc.js.formatStr("a: %s, b: %s", a, b);
 	     cc.js.formatStr(a, b, c); 
 	*/
-	export function formatStr(): string;	
+	export function formatStr(a:string, ...b:any): string;	
 	/** undefined */
 	export class array {		
 		/**
