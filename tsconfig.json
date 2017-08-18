@@ -13,9 +13,9 @@
     //"listEmittedFiles": true
   },
 
-  "include": [
-    //"namespaces"
-  ],
+  // "include": [
+  //   "namespaces"
+  // ],
 
   "exclude": [
     "node_modules"

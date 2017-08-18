@@ -3567,6 +3567,9 @@ declare module cc {
 		``` 
 		*/
 		pauseAllActions(): void;		
+
+		setPos (position:Vec2, anchorPoint?:Vec2, isBoundingBox?:boolean) 
+
 		/**
 		!#en Resume all paused actions on the current node. Equals to `cc.director.getActionManager().resumeTarget(node)`.
 		!#zh 恢复运行本节点上所有暂停的动作。和 `cc.director.getActionManager().resumeTarget(node);` 等价。

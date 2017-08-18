@@ -29,20 +29,6 @@ cc.Node.prototype.setPos = function (position, anchorPoint, isBoundingBox) {
     var offsetY = (nodeAnchorPoint.y - anchorPoint.y) * height;
     this.setPosition(cc.p(position.x + offsetX, position.y + offsetY));
 };
-// namespace cc {
-//     export class Node{
-//         setPos(position, anchorPoint?, isBoundingBox?:boolean){
-//             var anchorPoint = anchorPoint || cc.p(0.5, 0.5);
-//             var nodeAnchorPoint = this.getAnchorPoint();
-//             var size = isBoundingBox ? this.getBoundingBox() : this.getContentSize();
-//             var width = size.width;
-//             var height = size.height;
-//             var offsetX = (nodeAnchorPoint.x - anchorPoint.x) * width;
-//             var offsetY = (nodeAnchorPoint.y - anchorPoint.y) * height;
-//             this.setPosition(cc.p(position.x + offsetX, position.y + offsetY));
-//         }
-//     }
-// } 
 /**
  * 常量
  */
@@ -72,18 +58,6 @@ var cs;
     cs.ANCHOR_RIGHT_TOP = cc.p(1, 1);
 })(cs || (cs = {}));
 window["cs"] = cs;
-// let sgn = function (target: Function, key: string, value: any){
-//         return {
-//             value: function (...args: any[]) {
-//                 var a = args.map(a => JSON.stringify(a)).join();
-//                 var result = value.value.apply(this, args);
-//                 var r = JSON.stringify(result);
-//                 console.log(`Call: ${key}(${a}) => ${r}`);
-//                 return result;
-//             }
-//         };
-// }
-// window.sgn = sgn; 
 /**
  * 枚举
  */
