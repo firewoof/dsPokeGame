@@ -16,6 +16,16 @@ namespace cs {
         export const YELLOW = cc.color(252, 187, 12);
         /** BLACK */
         export const BLACK = cc.color(21, 25, 26);
+
+        export const ANCHOR_LEFT_BOTTOM = cc.p(0,0);
+        export const ANCHOR_BOTTOM = cc.p(0.5,0);
+        export const ANCHOR_RIGHT_BOTTOM = cc.p(1,0);
+        export const ANCHOR_LEFT = cc.p(0,0.5);
+        export const ANCHOR_CENTER = cc.p(0.5,0.5);
+        export const ANCHOR_RIGHT = cc.p(1,0.5);
+        export const ANCHOR_LEFT_TOP = cc.p(0,1);
+        export const ANCHOR_TOP = cc.p(0.5,1);
+        export const ANCHOR_RIGHT_TOP = cc.p(1,1);
 }
 
 window["cs"] = cs;

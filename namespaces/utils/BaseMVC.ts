@@ -22,7 +22,7 @@ class BaseModel{
         this._className = className;
     }
 
-    public addSignalListenner(proName : string, callback) : void
+    protected addSignalListenner(proName : string, callback) : void
     {
         let signal:Signal = this._signalMap[proName + "ChangedSignal"];
         if(signal){
@@ -39,7 +39,7 @@ class BaseModel{
         return signal;
     }
 
-    public registerChangedSignal(proName:string) : void 
+    protected registerChangedSignal(proName:string) : void 
     {
         cs.registerChangedSignal(this, proName);
     }
@@ -48,7 +48,7 @@ class BaseModel{
      * @param proName 属性名(不包含开头“_”下划线)
      * @param changeValue 默认可不传 表示值是以_开头的变量
      */
-    public dispatchChangedSignal(proName:string, changeValue?) : void 
+    protected dispatchChangedSignal(proName:string, changeValue?) : void 
     {
         cs.dispatchChangedSignal(this, proName, changeValue || this["_"+proName]);
     }

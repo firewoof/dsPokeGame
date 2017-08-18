@@ -11,8 +11,8 @@ Released under the MIT license.
 */
 class Signal {
     _traceName : string
-    _listenersDic : Map<any,any> //key是getKey出来的字符串，value是listener
-    _oneTimeListenersDic : Map<any,any>//key是getKey出来的字符串，value是listener
+    _listenersDic  //key是getKey出来的字符串，value是listener
+    _oneTimeListenersDic //key是getKey出来的字符串，value是listener
     _emitListenersArr
     _numListeners : number
     _numOneTimeListeners : number

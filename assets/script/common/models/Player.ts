@@ -5,6 +5,9 @@ export class SimplePlayer extends BaseModel{
     protected _id;
     protected _nickName;
 
+    protected _status
+    protected _chairId
+
     constructor(className){
         super(className || "BaseModel");
 

@@ -14,6 +14,15 @@ declare namespace cs {
     const YELLOW: cc.Color;
     /** BLACK */
     const BLACK: cc.Color;
+    const ANCHOR_LEFT_BOTTOM: cc.Vec2;
+    const ANCHOR_BOTTOM: cc.Vec2;
+    const ANCHOR_RIGHT_BOTTOM: cc.Vec2;
+    const ANCHOR_LEFT: cc.Vec2;
+    const ANCHOR_CENTER: cc.Vec2;
+    const ANCHOR_RIGHT: cc.Vec2;
+    const ANCHOR_LEFT_TOP: cc.Vec2;
+    const ANCHOR_TOP: cc.Vec2;
+    const ANCHOR_RIGHT_TOP: cc.Vec2;
 }
 /**
  * 枚举
@@ -32,6 +41,23 @@ declare namespace cs {
     enum LSTypes {
         UUID = "UUID",
         NORMAL = "Normal",
+    }
+    /**
+     * 黑红梅方
+     */
+    enum CardSuits {
+        Spades = 1,
+        Hearts = 2,
+        Club = 3,
+        Diamonds = 4,
+    }
+    /**
+     * 玩家的准备状态
+     */
+    enum ReadyStatus {
+        None = 1,
+        Ready = 2,
+        Left = 3,
     }
 }
 /**
@@ -133,6 +159,9 @@ declare namespace cs {
     enum PrefabSrc {
         loginView = "prefabs/loginView",
         mainView = "prefabs/main/mainView",
+        pokerCard = "prefabs/common/pokerCard",
+        pokerSelfPanel = "prefabs/common/pokerSelfPanel",
+        pokerSheetOutLeft = "prefabs/common/pokerSheetOutLeft",
     }
 }
 declare class BaseController {
@@ -144,14 +173,14 @@ declare class BaseModel {
     protected _className: string;
     protected _signalMap: object;
     constructor(className: string);
-    addSignalListenner(proName: string, callback: any): void;
+    protected addSignalListenner(proName: string, callback: any): void;
     getChangedSignal(proName: string): Signal;
-    registerChangedSignal(proName: string): void;
+    protected registerChangedSignal(proName: string): void;
     /**
      * @param proName 属性名(不包含开头“_”下划线)
      * @param changeValue 默认可不传 表示值是以_开头的变量
      */
-    dispatchChangedSignal(proName: string, changeValue?: any): void;
+    protected dispatchChangedSignal(proName: string, changeValue?: any): void;
     destroy(): void;
     /**
      * 偷懒用，一键生成 get set
@@ -168,8 +197,8 @@ declare class BaseView extends cc.Component {
 }
 declare class Signal {
     _traceName: string;
-    _listenersDic: Map<any, any>;
-    _oneTimeListenersDic: Map<any, any>;
+    _listenersDic: any;
+    _oneTimeListenersDic: any;
     _emitListenersArr: any;
     _numListeners: number;
     _numOneTimeListeners: number;

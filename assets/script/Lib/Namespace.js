@@ -8,6 +8,41 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+/// <reference path="./../../creator.d.ts" />
+//-------------------cc.Node的扩展--------------------------
+/**
+ * 以锚点相对布局(不会修改node锚点)
+ * @param position      (想要设置的位置)
+ * @param [anchorPoint]   (以哪个参考锚点设置位置,note:不会改变实际锚点)
+ * @param [isBoundingBox] (如果node有缩放的话，这里要设置为true 结果才能保证正确)
+ */
+cc.Node.prototype.setPos = function (position, anchorPoint, isBoundingBox) {
+    var anchorPoint = anchorPoint || cc.p(0.5, 0.5);
+    var nodeAnchorPoint = this.getAnchorPoint();
+    // if(this.isIgnoreAnchorPointForPosition()){
+    //     nodeAnchorPoint = cc.p(0, 0);
+    // }
+    var size = isBoundingBox ? this.getBoundingBox() : this.getContentSize();
+    var width = size.width;
+    var height = size.height;
+    var offsetX = (nodeAnchorPoint.x - anchorPoint.x) * width;
+    var offsetY = (nodeAnchorPoint.y - anchorPoint.y) * height;
+    this.setPosition(cc.p(position.x + offsetX, position.y + offsetY));
+};
+// namespace cc {
+//     export class Node{
+//         setPos(position, anchorPoint?, isBoundingBox?:boolean){
+//             var anchorPoint = anchorPoint || cc.p(0.5, 0.5);
+//             var nodeAnchorPoint = this.getAnchorPoint();
+//             var size = isBoundingBox ? this.getBoundingBox() : this.getContentSize();
+//             var width = size.width;
+//             var height = size.height;
+//             var offsetX = (nodeAnchorPoint.x - anchorPoint.x) * width;
+//             var offsetY = (nodeAnchorPoint.y - anchorPoint.y) * height;
+//             this.setPosition(cc.p(position.x + offsetX, position.y + offsetY));
+//         }
+//     }
+// } 
 /**
  * 常量
  */
@@ -26,6 +61,15 @@ var cs;
     cs.YELLOW = cc.color(252, 187, 12);
     /** BLACK */
     cs.BLACK = cc.color(21, 25, 26);
+    cs.ANCHOR_LEFT_BOTTOM = cc.p(0, 0);
+    cs.ANCHOR_BOTTOM = cc.p(0.5, 0);
+    cs.ANCHOR_RIGHT_BOTTOM = cc.p(1, 0);
+    cs.ANCHOR_LEFT = cc.p(0, 0.5);
+    cs.ANCHOR_CENTER = cc.p(0.5, 0.5);
+    cs.ANCHOR_RIGHT = cc.p(1, 0.5);
+    cs.ANCHOR_LEFT_TOP = cc.p(0, 1);
+    cs.ANCHOR_TOP = cc.p(0.5, 1);
+    cs.ANCHOR_RIGHT_TOP = cc.p(1, 1);
 })(cs || (cs = {}));
 window["cs"] = cs;
 // let sgn = function (target: Function, key: string, value: any){
@@ -61,6 +105,25 @@ var cs;
         LSTypes["UUID"] = "UUID";
         LSTypes["NORMAL"] = "Normal";
     })(LSTypes = cs.LSTypes || (cs.LSTypes = {}));
+    /**
+     * 黑红梅方
+     */
+    var CardSuits;
+    (function (CardSuits) {
+        CardSuits[CardSuits["Spades"] = 1] = "Spades";
+        CardSuits[CardSuits["Hearts"] = 2] = "Hearts";
+        CardSuits[CardSuits["Club"] = 3] = "Club";
+        CardSuits[CardSuits["Diamonds"] = 4] = "Diamonds";
+    })(CardSuits = cs.CardSuits || (cs.CardSuits = {}));
+    /**
+     * 玩家的准备状态
+     */
+    var ReadyStatus;
+    (function (ReadyStatus) {
+        ReadyStatus[ReadyStatus["None"] = 1] = "None";
+        ReadyStatus[ReadyStatus["Ready"] = 2] = "Ready";
+        ReadyStatus[ReadyStatus["Left"] = 3] = "Left"; //离开
+    })(ReadyStatus = cs.ReadyStatus || (cs.ReadyStatus = {}));
 })(cs || (cs = {}));
 /**
  * cs 自定义命名空间
@@ -413,6 +476,9 @@ var cs;
     (function (PrefabSrc) {
         PrefabSrc["loginView"] = "prefabs/loginView";
         PrefabSrc["mainView"] = "prefabs/main/mainView";
+        PrefabSrc["pokerCard"] = "prefabs/common/pokerCard";
+        PrefabSrc["pokerSelfPanel"] = "prefabs/common/pokerSelfPanel";
+        PrefabSrc["pokerSheetOutLeft"] = "prefabs/common/pokerSheetOutLeft";
     })(PrefabSrc = cs.PrefabSrc || (cs.PrefabSrc = {}));
 })(cs || (cs = {}));
 /// <reference path="./../../creator.d.ts" />

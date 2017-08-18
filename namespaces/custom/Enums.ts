@@ -17,4 +17,23 @@ namespace cs {
         UUID = "UUID",
         NORMAL = "Normal"
     }
+
+    /**
+     * 黑红梅方
+     */
+    export enum CardSuits{
+        Spades = 1,
+        Hearts,
+        Club,
+        Diamonds
+    }
+
+    /**
+     * 玩家的准备状态
+     */
+    export enum ReadyStatus{
+        None = 1,   //未就绪
+        Ready,      //就绪
+        Left        //离开
+    }
 }
